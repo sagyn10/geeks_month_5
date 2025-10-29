@@ -1,0 +1,16 @@
+nohup: ввод игнорируется
+Watching for file changes with StatReloader
+[29/Oct/2025 23:34:12] "GET /api/v1/products/reviews/ HTTP/1.1" 200 939
+[29/Oct/2025 23:35:02] "GET /api/v1/products/reviews/ HTTP/1.1" 200 939
+/home/user/Desktop/shop_api/product/serializers.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+October 29, 2025 - 23:33:45
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
