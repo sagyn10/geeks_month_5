@@ -1,14 +1,83 @@
 nohup: ввод игнорируется
 Watching for file changes with StatReloader
-[29/Oct/2025 23:34:12] "GET /api/v1/products/reviews/ HTTP/1.1" 200 939
-[29/Oct/2025 23:35:02] "GET /api/v1/products/reviews/ HTTP/1.1" 200 939
-/home/user/Desktop/shop_api/product/serializers.py changed, reloading.
+[02/Nov/2025 06:48:21] "GET /api/v1/product/ HTTP/1.1" 200 493
+[02/Nov/2025 06:48:28] "GET /api/v1/category/ HTTP/1.1" 200 159
+/home/user/Desktop/shop_api/shop_api/urls.py changed, reloading.
 Performing system checks...
 
 System check identified no issues (0 silenced).
-October 29, 2025 - 23:33:45
+November 02, 2025 - 06:48:13
 Django version 5.2.7, using settings 'shop_api.settings'
-Starting development server at http://127.0.0.1:8001/
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+/home/user/Desktop/shop_api/product/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 02, 2025 - 06:48:45
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+[02/Nov/2025 06:49:09] "GET /api/v1/categories/ HTTP/1.1" 200 159
+[02/Nov/2025 06:49:15] "GET /api/v1/products/ HTTP/1.1" 200 493
+[02/Nov/2025 06:49:27] "GET /api/v1/reviews/ HTTP/1.1" 200 905
+[02/Nov/2025 06:49:35] "POST /api/v1/categories/ HTTP/1.1" 201 29
+[02/Nov/2025 06:49:42] "POST /api/v1/products/ HTTP/1.1" 201 251
+[02/Nov/2025 06:49:49] "POST /api/v1/reviews/ HTTP/1.1" 201 81
+[02/Nov/2025 06:49:55] "PUT /api/v1/categories/11/ HTTP/1.1" 201 52
+[02/Nov/2025 06:50:03] "GET /api/v1/products/reviews/ HTTP/1.1" 200 1132
+/home/user/Desktop/shop_api/product/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 02, 2025 - 06:49:01
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+[02/Nov/2025 06:57:35] "GET /api/v1/categories/ HTTP/1.1" 200 231
+/home/user/Desktop/shop_api/product/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 02, 2025 - 06:50:19
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+/home/user/Desktop/shop_api/product/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 02, 2025 - 06:57:56
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8002/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
+Watching for file changes with StatReloader
+/home/user/Desktop/shop_api/product/views.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+November 02, 2025 - 06:58:11
+Django version 5.2.7, using settings 'shop_api.settings'
+Starting development server at http://127.0.0.1:8002/
 Quit the server with CONTROL-C.
 
 WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.

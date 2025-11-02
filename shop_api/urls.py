@@ -21,19 +21,22 @@ from product import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    # Старые маршруты (для совместимости)
+    path('api/v1/product/', views.product_create_list, name='product-list-old'),
+    path('api/v1/product/<int:id>/', views.product_detail, name='product-detail-old'),
+    path('api/v1/category/', views.category_create_list, name='category-list-old'),
+    path('api/v1/category/<int:id>/', views.category_detail, name='category-detail-old'),
+    path('api/v1/review/', views.review_create_list, name='review-list-old'),
+    path('api/v1/review/<int:id>/', views.review_detail, name='review-detail-old'),
     
-    path('api/v1/product/', views.product_list, name='product-list'),
-    path('api/v1/product/<int:id>/', views.product_detail, name='product-detail'),
+    # Новые маршруты согласно домашнему заданию 3
+    path('api/v1/categories/', views.category_create_list, name='categories-list'),
+    path('api/v1/categories/<int:id>/', views.category_detail, name='categories-detail'),
+    path('api/v1/products/', views.product_create_list, name='products-list'),
+    path('api/v1/products/<int:id>/', views.product_detail, name='products-detail'),
+    path('api/v1/reviews/', views.review_create_list, name='reviews-list'),
+    path('api/v1/reviews/<int:id>/', views.review_detail, name='reviews-detail'),
     
- 
-    path('api/v1/category/', views.category_list, name='category-list'),
-    path('api/v1/category/<int:id>/', views.catgory_detail, name='category-detail'),
-    
-  
-    path('api/v1/review/', views.review_list, name='review-list'),
-    path('api/v1/review/<int:id>/', views.review_detail, name='review-detail'),
-    
-    
+    # Специальные эндпоинты
     path('api/v1/products/reviews/', views.products_with_reviews, name='products-with-reviews'),
-    path('api/v1/categories/', views.categories_with_count, name='categories-with-count'),
 ]

@@ -3,6 +3,7 @@ from .models import Product, Category, Review
 from django.db.models import Avg, Count
 
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     """Простой сериализатор для отзывов в эндпоинте /api/v1/products/reviews/"""
     class Meta:
@@ -17,10 +18,11 @@ class ReviewDetailSerializers(serializers.ModelSerializer):
 
 
 class ReviewListSerializers(serializers.ModelSerializer):
+   
     class Meta:
         model = Review
         fields = ['id', 'text', 'product', 'stars']
-        depth = 1
+        
 
 class CategoryDetailSerializers(serializers.ModelSerializer):
     products_count = serializers.IntegerField(read_only=True)
@@ -62,7 +64,7 @@ class ProductWithReviewsSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'title', 'description', 'price', 'category', 
                  'created_at', 'updated_at', 'reviews', 'average_rating']
-        depth = 1
+        # depth = 1
 
 class ProductDetailSerializers(serializers.ModelSerializer):
     class Meta:
@@ -73,5 +75,5 @@ class ProductDetailSerializers(serializers.ModelSerializer):
 class ProductListSerializers(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title', 'price']
+        fields = ['id', 'title', 'description', 'price']
 
