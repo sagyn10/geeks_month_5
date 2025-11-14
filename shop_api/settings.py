@@ -26,7 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',  # Для токенной авторизации
     'product', 
+    'users',  # Наше новое приложение для пользователей
 ]
 
 MIDDLEWARE = [
@@ -110,3 +112,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django REST Framework настройки
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Токенная авторизация
+        'rest_framework.authentication.SessionAuthentication',  # Сессионная авторизация для браузера
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # Чтение для всех, запись для авторизованных
+    ],
+}
