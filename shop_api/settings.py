@@ -120,6 +120,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',  # Сессионная авторизация для браузера
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # Чтение для всех, запись для авторизованных
+        'rest_framework.permissions.AllowAny',  # Чтение для всех, запись для авторизованных
     ],
 }

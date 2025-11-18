@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,144 +13,153 @@ from .serializers import (
 )
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def register_user(request):
+class RegisterView(APIView):
     """
     API для регистрации новых пользователей.
-    
-    Принимает:
-    - username: имя пользователя
-    - password: пароль
-    
-    Возвращает:
-    - username: имя зарегистрированного пользователя
-    - confirmation_code: 6-значный код для подтверждения
+    POST запрос → создаёт неактивного пользователя и код.
     """
-    serializer = RegisterUserSerializer(data=request.data)
+    permission_classes = [AllowAny]
     
-    if serializer.is_valid():
-        username = serializer.validated_data['username']
-        password = serializer.validated_data['password']
+    def post(self, request):
+        """
+        Принимает:
+        - username: имя пользователя
+        - password: пароль
         
-        try:
-            with transaction.atomic():
-                # Создаем нового пользователя (неактивного)
-                user = User.objects.create_user(
-                    username=username,
-                    password=password,
-                    is_active=False  # Пользователь неактивен до подтверждения
-                )
-                
-                # Создаем код подтверждения
-                confirmation = ConfirmationCode.objects.create(user=user)
-                
+        Возвращает:
+        - username: имя зарегистрированного пользователя
+        - confirmation_code: 6-значный код для подтверждения
+        """
+        serializer = RegisterUserSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+            
+            try:
+                with transaction.atomic():
+                    # Создаем нового пользователя (неактивного)
+                    user = User.objects.create_user(
+                        username=username,
+                        password=password,
+                        is_active=False  # Пользователь неактивен до подтверждения
+                    )
+                    
+                    # Создаем код подтверждения
+                    confirmation = ConfirmationCode.objects.create(user=user)
+                    
+                    return Response({
+                        'message': 'Пользователь зарегистрирован успешно',
+                        'username': username,
+                        'confirmation_code': confirmation.code
+                    }, status=status.HTTP_201_CREATED)
+                    
+            except Exception as e:
                 return Response({
-                    'message': 'Пользователь зарегистрирован успешно',
-                    'username': username,
-                    'confirmation_code': confirmation.code
-                }, status=status.HTTP_201_CREATED)
-                
-        except Exception as e:
-            return Response({
-                'error': 'Ошибка при регистрации пользователя'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    'error': 'Ошибка при регистрации пользователя'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def confirm_user(request):
+class ConfirmView(APIView):
     """
     API для подтверждения регистрации пользователя.
-    
-    Принимает:
-    - username: имя пользователя
-    - code: 6-значный код подтверждения
-    
-    Возвращает:
-    - message: сообщение об успешном подтверждении
-    - username: имя активированного пользователя
+    POST запрос → активирует пользователя.
     """
-    serializer = ConfirmUserSerializer(data=request.data)
+    permission_classes = [AllowAny]
     
-    if serializer.is_valid():
-        username = serializer.validated_data['username']
-        code = serializer.validated_data['code']
+    def post(self, request):
+        """
+        Принимает:
+        - username: имя пользователя
+        - code: 6-значный код подтверждения
         
-        try:
-            with transaction.atomic():
-                # Ищем пользователя по username
-                user = User.objects.get(username=username, is_active=False)
-                
-                # Проверяем код подтверждения
-                confirmation = ConfirmationCode.objects.get(user=user, code=code)
-                
-                # Активируем пользователя
-                user.is_active = True
-                user.save()
-                
-                # Удаляем использованный код подтверждения
-                confirmation.delete()
-                
+        Возвращает:
+        - message: сообщение об успешном подтверждении
+        - username: имя активированного пользователя
+        """
+        serializer = ConfirmUserSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            code = serializer.validated_data['code']
+            
+            try:
+                with transaction.atomic():
+                    # Ищем пользователя по username
+                    user = User.objects.get(username=username, is_active=False)
+                    
+                    # Проверяем код подтверждения
+                    confirmation = ConfirmationCode.objects.get(user=user, code=code)
+                    
+                    # Активируем пользователя
+                    user.is_active = True
+                    user.save()
+                    
+                    # Удаляем использованный код подтверждения
+                    confirmation.delete()
+                    
+                    return Response({
+                        'message': 'Аккаунт успешно подтвержден',
+                        'username': username
+                    }, status=status.HTTP_200_OK)
+                    
+            except User.DoesNotExist:
                 return Response({
-                    'message': 'Аккаунт успешно подтвержден',
-                    'username': username
-                }, status=status.HTTP_200_OK)
+                    'error': 'Пользователь не найден или уже активирован'
+                }, status=status.HTTP_404_NOT_FOUND)
                 
-        except User.DoesNotExist:
-            return Response({
-                'error': 'Пользователь не найден или уже активирован'
-            }, status=status.HTTP_404_NOT_FOUND)
-            
-        except ConfirmationCode.DoesNotExist:
-            return Response({
-                'error': 'Неверный код подтверждения'
-            }, status=status.HTTP_400_BAD_REQUEST)
-            
-        except Exception as e:
-            return Response({
-                'error': 'Ошибка при подтверждении аккаунта'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except ConfirmationCode.DoesNotExist:
+                return Response({
+                    'error': 'Неверный код подтверждения'
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+            except Exception as e:
+                return Response({
+                    'error': 'Ошибка при подтверждении аккаунта'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def login_user(request):
+class LoginView(APIView):
     """
     API для входа в систему.
-    
-    Принимает:
-    - username: имя пользователя
-    - password: пароль
-    
-    Возвращает:
-    - token: токен аутентификации для активных пользователей
-    - user_id: ID пользователя
-    - username: имя пользователя
+    POST запрос → логинит только активированного пользователя.
     """
-    serializer = LoginUserSerializer(data=request.data)
+    permission_classes = [AllowAny]
     
-    if serializer.is_valid():
-        user = serializer.validated_data['user']
+    def post(self, request):
+        """
+        Принимает:
+        - username: имя пользователя
+        - password: пароль
         
-        try:
-            # Создаем или получаем токен для пользователя
-            token, created = Token.objects.get_or_create(user=user)
+        Возвращает:
+        - token: токен аутентификации для активных пользователей
+        - user_id: ID пользователя
+        - username: имя пользователя
+        """
+        serializer = LoginUserSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
             
-            return Response({
-                'message': 'Успешный вход в систему',
-                'token': token.key,
-                'user_id': user.id,
-                'username': user.username
-            }, status=status.HTTP_200_OK)
-            
-        except Exception as e:
-            return Response({
-                'error': 'Ошибка при входе в систему'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                # Создаем или получаем токен для пользователя
+                token, created = Token.objects.get_or_create(user=user)
+                
+                return Response({
+                    'message': 'Успешный вход в систему',
+                    'token': token.key,
+                    'user_id': user.id,
+                    'username': user.username
+                }, status=status.HTTP_200_OK)
+                
+            except Exception as e:
+                return Response({
+                    'error': 'Ошибка при входе в систему'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
