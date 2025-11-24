@@ -1,0 +1,36 @@
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Не пробрасываем порт Postgres на хост, чтобы избежать конфликта с локальным Postgres.
+    # Если нужен доступ к БД с хоста — замените на "5433:5432" или остановите локальный Postgres.
+
+  web:
+    build: .
+    command: gunicorn shop_api.wsgi:application --bind 0.0.0.0:8000
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+    volumes:
+      - ./:/app
+      - static_volume:/vol/static
+    ports:
+      - "8083:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  static_volume:
+
